@@ -1,0 +1,5 @@
+.env
+*.mid
+!arp1.mid
+*.mp3
+*.wav

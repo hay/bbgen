@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from bbgen.isobar import Timeline
 from bbgen.soundfont import Soundfont
 import isobar as iso

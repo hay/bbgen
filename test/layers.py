@@ -1,3 +1,6 @@
+import sys
+sys.path.append("..")
+
 from bbgen.midi import Midi
 from bbgen.paulstretch import Paulstretch
 from bbgen.soundfont import Soundfont

@@ -46,4 +46,4 @@ timeline.schedule({
     "duration": 1
 })
 
-timeline.render(Soundfont("./FluidR3Mono_GM.sf3")).write("arpeggio.wav")
+timeline.render(Soundfont("./FluidR3Mono_GM.sf3")).export("arpeggio.mp3")

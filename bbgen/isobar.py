@@ -2,9 +2,9 @@
 # to faciliate exporting / rendering
 from bbgen.midi import Midi
 from bbgen.soundfont import Soundfont
-from bbgen.wave import Wave
 from isobar.io import MidiFileOutputDevice
 from isobar import Timeline as IsoTimeline
+from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
 import isobar as iso
 
@@ -21,7 +21,7 @@ class Timeline(IsoTimeline):
             "action" : lambda: self.clear()
         }, delay = beats)
 
-    def render(self, soundfont: Soundfont) -> Wave:
+    def render(self, soundfont: Soundfont) -> AudioSegment:
         # Can probably be done more elegantly
         self.run()
         self.output.write()

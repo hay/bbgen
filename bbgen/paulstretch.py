@@ -1,6 +1,6 @@
-from bbgen.wave import Wave
 from dataclasses import dataclass
 from numpy import *
+from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
 import sys
 import scipy.io.wavfile
@@ -11,18 +11,19 @@ class Paulstretch:
     stretch: float = 8.0
     window_size: float = 0.25
 
-    def apply(self, wave:Wave) -> Wave:
+    def apply(self, audio_segment:AudioSegment) -> AudioSegment:
+        # FIXME: use raw_data() here instead of rendering to file first
         print("Applying paulstretch")
-        self._load_wav(wave.as_tmpfile())
 
-        file = NamedTemporaryFile()
-
-        with file:
-            self._render(file.name)
-            file.seek(0)
-            return Wave.from_data(file.read())
-
-        return output
+        in_file = NamedTemporaryFile()
+        out_file = NamedTemporaryFile()
+        audio_segment.export(in_file.name, format = "wav")
+        self._load_wav(in_file.name)
+        self._render(out_file.name)
+        new_segment = AudioSegment.from_wav(out_file.name)
+        in_file.close()
+        out_file.close()
+        return new_segment
 
     # One day we need to refactor these horrible pieces
     # of PD code

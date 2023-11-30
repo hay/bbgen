@@ -1,14 +1,22 @@
 import sys
 sys.path.append("..")
 
-from bbgen.pitchshift import PitchShift
-from bbgen.wave import Wave
+from bbgen.effects import PitchShift
+from pydub import AudioSegment
 
-hammond = Wave("hammond.wav")
-melody = Wave() # Empty to append other stuff to
+hammond = AudioSegment.from_wav("hammond.wav")
+comp = None
 
-for tone in range(12):
-    effect = PitchShift(semitones = tone)
-    melody.append(hammond.effect(effect))
+for octave in (-2, 0, 2):
+    melody = AudioSegment.silent()
 
-melody.write("hammond.mp3", format = "mp3")
+    for tone in (0, 2, 6, 2, 6, 1, 3):
+        effect = PitchShift(semitones = tone + octave)
+        melody = melody + effect.apply(hammond)
+
+    if not comp:
+        comp = AudioSegment.silent(duration = len(melody))
+
+    comp = comp.overlay(melody)
+
+comp.export("hammond.mp3", format = "mp3")

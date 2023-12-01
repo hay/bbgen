@@ -2,12 +2,13 @@ import sys
 sys.path.append("..")
 
 from bbgen.effects import PitchShift
+from bbgen.effects import TimeStretch
 from pydub import AudioSegment
 
 hammond = AudioSegment.from_wav("hammond.wav")
 comp = None
 
-for octave in (-2, 0, 2):
+for octave in (-7, 0, 7):
     melody = AudioSegment.silent()
 
     for tone in (0, 2, 6, 2, 6, 1, 3):
@@ -19,4 +20,4 @@ for octave in (-2, 0, 2):
 
     comp = comp.overlay(melody)
 
-comp.export("hammond.mp3", format = "mp3")
+TimeStretch(0.5).apply(comp).export("hammond.mp3", format = "mp3")

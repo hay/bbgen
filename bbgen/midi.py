@@ -54,3 +54,7 @@ class Midi:
         message = Message('program_change', program = program)
         self.midi.tracks[track_index].insert(0, message)
         return self
+
+    @property
+    def tracks(self):
+        return self.midi.tracks

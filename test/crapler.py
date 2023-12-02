@@ -9,6 +9,14 @@ mozart = Midi("mozart.mid")
 meow = AudioSegment.from_wav("meow.wav")[0:200]
 crapler = Crapler(meow)
 
-track1 = crapler.render(mozart.get_track(1))
-track2 = crapler.render(mozart.get_track(2))
-track2.overlay(track1).export("meowzart.mp3")
+# First render the first track, then just loop over the rest
+comp = None
+for track in mozart.tracks:
+    rendered = crapler.render(track)
+
+    if comp:
+        comp = comp.overlay(rendered)
+    else:
+        comp = rendered
+
+comp.export("meowzart.mp3")

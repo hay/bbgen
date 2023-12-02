@@ -21,6 +21,6 @@ for octave in (-7, 0, 7):
 
     comp = comp.overlay(melody)
 
-comp = TimeStretch(0.5).apply(comp)
-comp = Playbackspeed(0.5).apply(comp)
+comp = TimeStretch(stretch = 0.5).apply(comp)
+comp = TimeStretch(pitch = 0.5).apply(comp)
 comp[4000:].export("hammond.mp3", format = "mp3")

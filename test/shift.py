@@ -2,6 +2,7 @@ import sys
 sys.path.append("..")
 
 from bbgen.effects import PitchShift
+from bbgen.effects import Playbackspeed
 from bbgen.effects import TimeStretch
 from pydub import AudioSegment
 
@@ -20,4 +21,6 @@ for octave in (-7, 0, 7):
 
     comp = comp.overlay(melody)
 
-TimeStretch(0.5).apply(comp).export("hammond.mp3", format = "mp3")
+comp = TimeStretch(0.5).apply(comp)
+comp = Playbackspeed(0.5).apply(comp)
+comp[4000:].export("hammond.mp3", format = "mp3")

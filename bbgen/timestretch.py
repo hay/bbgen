@@ -8,6 +8,7 @@ from tempfile import NamedTemporaryFile
 class TimeStretch:
     stretch: float = 1
     pitch: float = 0
+    high_quality: bool = True
 
     def apply(self, segment:AudioSegment) -> AudioSegment:
         print(f"Applying TimeStretch stretch {self.stretch}, pitch {self.pitch}")
@@ -23,7 +24,8 @@ class TimeStretch:
                     input_audio = inp.read(inp.frames),
                     samplerate = inp.samplerate,
                     stretch_factor = self.stretch,
-                    pitch_shift_in_semitones = self.pitch
+                    pitch_shift_in_semitones = self.pitch,
+                    high_quality = self.high_quality
                 )
 
                 out.write(effected)

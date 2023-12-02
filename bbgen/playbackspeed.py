@@ -1,35 +1,23 @@
+from bbgen.timestretch import TimeStretch
 from dataclasses import dataclass
+from math import log
 from pydub import AudioSegment
-from tempfile import NamedTemporaryFile
-import wave
 
 @dataclass
 class Playbackspeed:
     rate: float = 1
+    high_quality: bool = True
 
     def apply(self, segment:AudioSegment) -> AudioSegment:
         print(f"Applying Playbackspeed {self.rate}")
 
-        # FIXME: this must somehow get more efficient
-        in_file = NamedTemporaryFile()
-        out_file = NamedTemporaryFile()
+        # Convert rate to semitones
+        pitch = log(self.rate ** 12) / log(2)
 
-        segment.export(in_file.name, format = "wav")
+        ts = TimeStretch(
+            stretch = self.rate,
+            pitch = pitch,
+            high_quality = self.high_quality
+        )
 
-        inp = wave.open(in_file.name, "rb")
-        out = wave.open(out_file.name, "wb")
-
-        signal = inp.readframes(-1)
-        out.setnchannels(segment.channels)
-        out.setsampwidth(segment.sample_width)
-        out.setframerate(segment.frame_rate * self.rate)
-        out.writeframes(signal)
-
-        segment = AudioSegment.from_wav(out_file.name)
-
-        in_file.close()
-        out_file.close()
-        inp.close()
-        out.close()
-
-        return segment
+        return ts.apply(segment)

@@ -27,6 +27,9 @@ class Midi:
             score.write("midi", fp = file.name)
             return cls(file.name)
 
+    def get_track(self, track:int):
+        return self.midi.tracks[track]
+
     def render(self, soundfont: Soundfont) -> AudioSegment:
         # Create temp files for in/out files
         in_file = NamedTemporaryFile()

@@ -6,11 +6,11 @@ from bbgen.midi import Midi
 from pydub import AudioSegment
 
 mozart = Midi("mozart.mid")
-meow = AudioSegment.from_wav("meow.wav")[0:200]
+meow = AudioSegment.from_wav("clarinet.wav")[0:500]
 crapler = Crapler(meow)
 
 # Render complete midi file using the same crapler
-crapler.render_midi(mozart).export("meowzart-complete.mp3")
+crapler.render_midi(mozart).export("mozart-complete.mp3")
 
 # Render a single track
-crapler.render_track(mozart.get_track(1)).export("meowzart-track.mp3")
+crapler.render_track(mozart.get_track(1)).export("mozart-track.mp3")

@@ -31,7 +31,7 @@ class Crapler:
                 time = time + msg.time
                 messages.append({
                     "semitone" : msg.note - self.root_note,
-                    "db" : -(msg.velocity / 10), # FIXME
+                    "db" : -(msg.velocity / 10) - 3, # FIXME
                     "time" : time
                 })
 
@@ -40,6 +40,7 @@ class Crapler:
         for msg in messages:
             # Adding a cache, this makes rendering four times as fast
             nid = str(msg["semitone"]) + ":" + str(msg["db"])
+            print(nid)
 
             if nid in self.cache:
                 note = self.cache[nid]

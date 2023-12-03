@@ -1,14 +1,26 @@
 from bbgen.effects import TimeStretch
-from mido import MidiTrack
+from mido import MidiTrack, MidiFile
 from pydub import AudioSegment
 
+MIDDLE_C:int = 60
+
 class Crapler:
-    def __init__(self, segment:AudioSegment, root_note:int = 60):
+    def __init__(self, segment:AudioSegment, root_note:int = MIDDLE_C):
         self.segment = segment
         self.root_note = root_note
 
-    def render(self, track:MidiTrack) -> AudioSegment:
-        # Middle C = note 60
+    def render_midi(self, file:MidiFile) -> AudioSegment:
+        # Create a new segment that is the length of the complete composition
+        print(f"Rendering midi file of {file.midi.length} length")
+        comp = AudioSegment.silent(duration = file.midi.length * 1000)
+
+        # First render the first track, then just loop over the rest
+        for track in file.tracks:
+            comp = comp.overlay(self.render_track(track))
+
+        return comp
+
+    def render_track(self, track:MidiTrack) -> AudioSegment:
         time = 0
         messages = []
 
@@ -18,7 +30,7 @@ class Crapler:
                 time = time + msg.time
                 messages.append({
                     "semitone" : msg.note - self.root_note,
-                    "db" : (msg.velocity / 10) - 5, # FIXME
+                    "db" : -(msg.velocity / 10), # FIXME
                     "time" : time
                 })
 

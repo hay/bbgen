@@ -1,3 +1,6 @@
+Render a single track
+crapler.render_track(mozart.get_track(1)).export("mozart-track.mp3")
+
 from scipy.io import wavfile
 import dawdreamer as daw
 import librosa
@@ -9,6 +12,9 @@ def get_param_index(desc, name):
     for d in desc:
         if d["name"] == name:
             return d["index"]
+
+# Samples need to be either mono or stero 44.1khz 16-bit WAV files
+# everything else will fail!
 
 engine = daw.RenderEngine(SAMPLE_RATE, BUFFER_SIZE)
 sig, sr = librosa.load("clarinet.wav", sr = SAMPLE_RATE, mono = False)

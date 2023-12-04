@@ -1,6 +1,7 @@
 .env
 *.mid
-!clarinet.wav
-!satie.mid
 *.mp3
 *.wav
+
+!satie.mid
+!clarinet.wav

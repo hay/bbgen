@@ -14,7 +14,10 @@ midi2audio==0.1.1
 mido==1.3.0
 msgpack==1.0.7
 numba==0.58.1
-numpy==1.26.2
+
+# We need this old version of numpy because of issues with Colab
+numpy==1.24.1
+
 packaging==23.2
 pedalboard==0.8.6
 platformdirs==4.0.0

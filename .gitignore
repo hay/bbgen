@@ -3,5 +3,6 @@
 *.mp3
 *.wav
 
-!satie.mid
 !clarinet.wav
+!music.mp3
+!satie.mid

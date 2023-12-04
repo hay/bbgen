@@ -10,7 +10,7 @@ meow = AudioSegment.from_wav("clarinet.wav")[0:500]
 crapler = Crapler(meow)
 
 # Render complete midi file using the same crapler
-crapler.render_midi(mozart).export("mozart-complete.mp3")
+crapler.render_midi(mozart).export("output/mozart-complete.mp3")
 
 # Render a single track
-crapler.render_track(mozart.get_track(1)).export("mozart-track.mp3")
+crapler.render_track(mozart.get_track(1)).export("output/mozart-track.mp3")

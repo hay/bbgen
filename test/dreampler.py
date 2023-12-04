@@ -10,7 +10,7 @@ clarinet = AudioSegment.from_wav("clarinet.wav")
 dreampler = Dreampler(clarinet)
 
 # Render complete midi file using the same crapler
-dreampler.render_midi(mozart).export("mozart-clarinet.mp3")
+dreampler.render_midi(mozart).export("output/mozart-clarinet.mp3")
 
 # Render a single track
-dreampler.render_track(mozart.get_track(1)).export("mozart-clarinet-track.mp3")
+dreampler.render_track(mozart.get_track(1)).export("output/mozart-clarinet-track.mp3")

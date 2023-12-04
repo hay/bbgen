@@ -1,7 +1,6 @@
 from bbgen.soundfont import Soundfont
 from midi2audio import FluidSynth
 from mido import MidiFile, MidiTrack, Message
-from music21 import converter
 from pathlib import Path
 from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
@@ -12,20 +11,6 @@ class Midi:
     def __init__(self, path: Path):
         self.path = path
         self.midi = MidiFile(self.path)
-
-    # Render Tinynotation as a new MIDI file
-    @classmethod
-    def from_tinynotation(cls, notation:str):
-        notation = notation.strip()
-
-        # Check if we have the "tinyNotation:" prefix and otherwise add it
-        if notation.find(TINY_NOTATION_PREFIX) != 0:
-            notation = TINY_NOTATION_PREFIX + notation
-
-        with NamedTemporaryFile(delete = False) as file:
-            score = converter.parse(notation)
-            score.write("midi", fp = file.name)
-            return cls(file.name)
 
     def get_track(self, track:int):
         return self.midi.tracks[track]

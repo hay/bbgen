@@ -1,5 +1,7 @@
 .env
 *.mid
 !arp1.mid
+!clarinet.wav
+!mozart.mid
 *.mp3
 *.wav

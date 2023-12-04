@@ -29,4 +29,4 @@ def stochastic(timeline):
 
 timeline = Timeline(beats = 128)
 stochastic(timeline)
-timeline.render(Soundfont("./FluidR3Mono_GM.sf3")).export("ibar.mp3", format = "mp3")
+timeline.render(Soundfont("./FluidR3Mono_GM.sf3")).export("output/ibar.mp3", format = "mp3")

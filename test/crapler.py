@@ -5,12 +5,12 @@ from bbgen.crapler import Crapler
 from bbgen.midi import Midi
 from pydub import AudioSegment
 
-mozart = Midi("mozart.mid")
-meow = AudioSegment.from_wav("clarinet.wav")[0:500]
-crapler = Crapler(meow)
+midi = Midi("satie.mid")
+instrument = AudioSegment.from_wav("clarinet.wav")
+crapler = Crapler(instrument)
 
 # Render complete midi file using the same crapler
-crapler.render_midi(mozart).export("output/mozart-complete.mp3")
+crapler.render_midi(midi).export("output/satie-crapler.mp3")
 
 # Render a single track
-crapler.render_track(mozart.get_track(1)).export("output/mozart-track.mp3")
+crapler.render_track(midi.get_track(1)).export("output/satie-crapler-track.mp3")

@@ -5,12 +5,12 @@ from bbgen.dreampler import Dreampler
 from bbgen.midi import Midi
 from pydub import AudioSegment
 
-mozart = Midi("mozart.mid")
-clarinet = AudioSegment.from_wav("clarinet.wav")
-dreampler = Dreampler(clarinet)
+midi = Midi("satie.mid")
+instrument = AudioSegment.from_wav("clarinet.wav")
+dreampler = Dreampler(instrument)
 
 # Render complete midi file using the same crapler
-dreampler.render_midi(mozart).export("output/mozart-clarinet.mp3")
+dreampler.render_midi(midi).export("output/satie-dreampler.mp3")
 
 # Render a single track
-dreampler.render_track(mozart.get_track(1)).export("output/mozart-clarinet-track.mp3")
+dreampler.render_track(midi.get_track(1)).export("output/satie-dreampler-track.mp3")

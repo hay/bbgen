@@ -1,8 +1,8 @@
 import sys
 sys.path.append("..")
 
+from bbgen.fluidsynth import FluidSynth
 from bbgen.isobar import Timeline
-from bbgen.soundfont import Soundfont
 import isobar as iso
 
 def reich(timeline):
@@ -29,28 +29,33 @@ def stochastic(timeline):
 
 def chords(timeline):
     key_sequence = iso.PSequence([
-        iso.Key("A", "minor"),
-        iso.Key("F"),
-        iso.Key("C"),
-        iso.Key("G"),
+        iso.Key("C", "minor"),
+        iso.Key("G", "minor"),
+        iso.Key("Bb", "major"),
+        iso.Key("F", "major"),
     ])
-
     key = iso.PStaticPattern(key_sequence, 4)
-
     timeline.schedule({
         "degree": 0,
         "key": key,
-        "octave": 3
+        "octave": 3,
+        "duration": 3,
     })
 
     timeline.schedule({
-        "degree": iso.PCreep(iso.PWhite(0, 6), 2, 2, 3),
+        "degree": 3,
         "key": key,
         "octave": 4,
-        "duration": 0.25
+        "duration": 3
     })
 
-timeline = Timeline(beats = 64)
+    timeline.schedule({
+        "degree": 5,
+        "key": key,
+        "octave": 4,
+        "duration": 3
+    })
+
+timeline = Timeline(60)
 chords(timeline)
-timeline.render(Soundfont("./FluidR3Mono_GM.sf3")).export("output/ibar.mp3", format = "mp3")
->>>>>>> Stashed changes
+FluidSynth("./FluidR3Mono_GM.sf3").render_midi(timeline.to_midi()).export("output/ibar.mp3")

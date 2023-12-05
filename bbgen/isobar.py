@@ -1,8 +1,8 @@
 # A wrapper around the regular isobar timeline
 # to faciliate exporting / rendering
-from bbgen.midi import Midi
 from isobar.io import MidiFileOutputDevice
 from isobar import Timeline as IsoTimeline
+from mido import MidiFile
 from tempfile import NamedTemporaryFile
 import isobar as iso
 
@@ -19,7 +19,7 @@ class Timeline(IsoTimeline):
             "action" : lambda: self.clear()
         }, delay = beats)
 
-    def to_midi(self) -> Midi:
+    def to_midi(self) -> MidiFile:
         self.run()
         self.output.write()
-        return Midi(self.file.name)
+        return MidiFile(self.file.name)

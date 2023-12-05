@@ -29,32 +29,12 @@ class Dreampler:
 
         raise ValueError(f"Parameter '{name}' not found.")
 
-    def render_midi(self, file:MidiFile) -> AudioSegment:
+    def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
-        print(f"Rendering midi file of {file.midi.length} length")
-        comp = AudioSegment.silent(duration = file.midi.length * 1000)
+        print(f"Rendering midi file of {midi.length} length")
 
-        # First render the first track, then just loop over the rest
-        for track in file.tracks:
-            comp = comp.overlay(self.render_track(track))
-
-        return comp
-
-    def render_track(self, track:MidiTrack) -> AudioSegment:
-        # We do something really ugly here, because the dawdream sampler
-        # doesn't render single tracks we save this single track
-        # as a new mid file and render that
-        midi = MidiFile()
-        midi.tracks.append(track)
         infile = NamedTemporaryFile(suffix = ".mid")
         midi.save(infile.name)
-        midi = MidiFile(infile.name)
-
-        print(f"Rendering track of length {midi.length}")
-
-        if midi.length == 0:
-            print("Track has no length, skipping")
-            return AudioSegment.empty()
 
         self.sampler.load_midi(infile.name)
         self.engine.load_graph([
@@ -71,4 +51,3 @@ class Dreampler:
         outfile.close()
 
         return segment
-

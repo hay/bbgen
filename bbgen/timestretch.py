@@ -11,8 +11,6 @@ class TimeStretch:
     high_quality: bool = True
 
     def apply(self, segment:AudioSegment) -> AudioSegment:
-        print(f"Applying TimeStretch stretch {self.stretch}, pitch {self.pitch}")
-
         in_file = NamedTemporaryFile(suffix = ".wav")
         out_file = NamedTemporaryFile(suffix = ".wav")
 

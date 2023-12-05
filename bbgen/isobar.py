@@ -1,10 +1,8 @@
 # A wrapper around the regular isobar timeline
 # to faciliate exporting / rendering
 from bbgen.midi import Midi
-from bbgen.soundfont import Soundfont
 from isobar.io import MidiFileOutputDevice
 from isobar import Timeline as IsoTimeline
-from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
 import isobar as iso
 
@@ -21,8 +19,7 @@ class Timeline(IsoTimeline):
             "action" : lambda: self.clear()
         }, delay = beats)
 
-    def render(self, soundfont: Soundfont) -> AudioSegment:
-        # Can probably be done more elegantly
+    def to_midi(self) -> Midi:
         self.run()
         self.output.write()
-        return Midi(self.file.name).render(soundfont)
+        return Midi(self.file.name)

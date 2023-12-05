@@ -1,10 +1,9 @@
 import sys
 sys.path.append("..")
 
-from bbgen.soundfont import Soundfont
-from bbgen.midi import Midi
-from bbgen.effects import Paulstretch
+from bbgen.fluidsynth import FluidSynth
+from mido import MidiFile
 
-arp1 = Midi("satie.mid").set_program(0, 90)
-audio = arp1.render(soundfont = Soundfont("./FluidR3Mono_GM.sf3"))
-audio.export("output/satie.mp3", format = "mp3")
+midi = MidiFile("satie.mid")
+synth = FluidSynth("./FluidR3Mono_GM.sf3")
+synth.render_midi(midi).export("output/satie-fluidsynth.mp3")

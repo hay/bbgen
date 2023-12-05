@@ -27,6 +27,30 @@ def stochastic(timeline):
         "duration": 0.25
     })
 
-timeline = Timeline(beats = 128)
-stochastic(timeline)
-timeline.to_midi().render(Soundfont("./FluidR3Mono_GM.sf3")).export("output/ibar.mp3", format = "mp3")
+def chords(timeline):
+    key_sequence = iso.PSequence([
+        iso.Key("A", "minor"),
+        iso.Key("F"),
+        iso.Key("C"),
+        iso.Key("G"),
+    ])
+
+    key = iso.PStaticPattern(key_sequence, 4)
+
+    timeline.schedule({
+        "degree": 0,
+        "key": key,
+        "octave": 3
+    })
+
+    timeline.schedule({
+        "degree": iso.PCreep(iso.PWhite(0, 6), 2, 2, 3),
+        "key": key,
+        "octave": 4,
+        "duration": 0.25
+    })
+
+timeline = Timeline(beats = 64)
+chords(timeline)
+timeline.render(Soundfont("./FluidR3Mono_GM.sf3")).export("output/ibar.mp3", format = "mp3")
+>>>>>>> Stashed changes

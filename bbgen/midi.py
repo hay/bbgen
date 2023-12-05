@@ -1,11 +1,30 @@
 from bbgen.soundfont import Soundfont
 from midi2audio import FluidSynth
-from mido import MidiFile, MidiTrack, Message
+from mido import MidiFile, MidiTrack, Message, tempo2bpm
 from pathlib import Path
 from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
 
-TINY_NOTATION_PREFIX = "tinyNotation:"
+def get_notes_from_track(track:MidiTrack) -> list:
+    notes = []
+    time = 0
+
+    for msg in track:
+        time = time + msg.time
+
+        if msg.type == "note_on":
+            notes.append({
+                "note" : msg.note,
+                "velocity" : msg.velocity,
+                "time" : time
+            })
+
+        if msg.type == "note_off":
+            for note in notes:
+                if note["note"] == msg.note:
+                    note["duration"] = time - note["time"]
+
+    return notes
 
 class Midi:
     def __init__(self, path: Path):

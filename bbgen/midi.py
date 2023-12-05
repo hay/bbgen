@@ -6,6 +6,7 @@ from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
 
 def get_notes_from_track(track:MidiTrack) -> list:
+    print(track)
     notes = []
     time = 0
 
@@ -24,7 +25,10 @@ def get_notes_from_track(track:MidiTrack) -> list:
                 if note["note"] == msg.note:
                     note["duration"] = time - note["time"]
 
-    return notes
+    return {
+        "total_time" : time,
+        "notes" : notes
+    }
 
 class Midi:
     def __init__(self, path: Path):

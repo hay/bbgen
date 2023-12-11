@@ -61,7 +61,7 @@ class Soundbank:
 # based on the file
 sb = Soundbank()
 
-for path in Path("12string_piano").glob("*.wav"):
+for path in Path("samples/epiano_dx7").glob("*.wav"):
     match = RE_PATTERN.findall(str(path.stem));
     note = int(match[0])
     segment = AudioSegment.from_wav(path)

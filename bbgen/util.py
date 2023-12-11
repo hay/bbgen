@@ -20,6 +20,12 @@ def get_notes_from_midi(midi:MidiFile) -> list:
                 if note["note"] == msg.note:
                     note["duration"] = time - note["time"]
 
+    # Make sure note always have a duration
+    for note in notes:
+        if "duration" not in note:
+            # TODO: should this be one?
+            note["duration"] = 1
+
     return notes
 
 # Loop over a track and change all instances of program_change to the program

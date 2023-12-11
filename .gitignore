@@ -2,6 +2,7 @@
 *.mid
 *.mp3
 *.wav
+test/samples
 
 !clarinet.wav
 !music.mp3

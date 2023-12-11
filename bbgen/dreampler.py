@@ -11,7 +11,9 @@ SAMPLE_RATE:int = 44100
 
 class Dreampler:
     def __init__(self, segment:AudioSegment, root_note:int = MIDDLE_C):
+        print(f"Initializing Dreampler with segment {segment}, root_note is {root_note}")
         self.root_note = root_note
+        self.segment = segment
 
         # Dawdreamer is quite a beast to initialize
         inp_file = NamedTemporaryFile(suffix = ".wav")
@@ -20,7 +22,8 @@ class Dreampler:
         sig, sr = librosa.load(inp_file.name, sr = SAMPLE_RATE, mono = False)
         self.sampler = self.engine.make_sampler_processor("playback", sig)
         self.param_desc = self.sampler.get_parameters_description()
-        self.sampler.set_parameter(self.param_index("Center Note"), self.root_note)
+        self.set_param("Center Note", self.root_note)
+        self.set_adsr()
 
     def param_index(self, name:str) -> int:
         for param in self.param_desc:
@@ -51,3 +54,12 @@ class Dreampler:
         outfile.close()
 
         return segment
+
+    def set_adsr(self, attack = 0, decay = 0, sustain = 1, release = 100):
+        self.set_param("Amp Env Attack", attack)
+        self.set_param("Amp Env Decay", decay)
+        self.set_param("Amp Env Sustain", sustain)
+        self.set_param("Amp Env Release", release)
+
+    def set_param(self, name:str, value):
+        self.sampler.set_parameter(self.param_index(name), value)

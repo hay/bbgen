@@ -3,6 +3,7 @@
 *.mp3
 *.wav
 test/samples
+!test/raindrop_c40/*.wav
 
 !clarinet.wav
 !music.mp3

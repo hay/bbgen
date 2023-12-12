@@ -6,6 +6,6 @@ from mido import MidiFile
 
 midi = MidiFile("satie.mid")
 instrument = Dreamstrument(
-    path = "samples/epiano_dx7"
+    path = "raindrop_c40"
 )
 instrument.render_midi(midi).export("output/instrument-dreampler.mp3")

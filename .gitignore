@@ -4,7 +4,8 @@
 *.wav
 test/samples
 !test/raindrop_c40/*.wav
-
+bbgen.egg-info
+build
 !clarinet.wav
 !music.mp3
 !satie.mid

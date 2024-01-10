@@ -11,6 +11,9 @@ SAMPLE_RATE:int = 44100
 
 class Dreampler:
     def __init__(self, segment:AudioSegment, root_note:int = MIDDLE_C):
+        if not isinstance(segment, AudioSegment):
+            raise Exception(f"Segment is not an AudioSegment but {type(segment)}: {segment}")
+
         print(f"Initializing Dreampler with segment {segment}, root_note is {root_note}")
         self.root_note = root_note
         self.segment = segment

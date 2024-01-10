@@ -9,6 +9,9 @@ MIDDLE_C:int = 60
 
 class Crapler:
     def __init__(self, segment:AudioSegment, root_note:int = MIDDLE_C):
+        if not isinstance(segment, AudioSegment):
+            raise Exception(f"Segment is not an AudioSegment but {type(segment)}: {segment}")
+
         self.cache = {}
         self.root_note = root_note
         self.segment = segment

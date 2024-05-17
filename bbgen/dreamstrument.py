@@ -23,6 +23,10 @@ class Dreamstrument:
         # based on the file
         for path in self.path.glob(f"*.{self.suffix}"):
             match = self.pattern.findall(str(path.stem));
+
+            if len(match) == 0:
+                raise Exception(f"Could not load soundbank {self.path}")
+
             note = int(match[0])
             segment = AudioSegment.from_wav(path)
             sampler = Dreampler(segment, note)

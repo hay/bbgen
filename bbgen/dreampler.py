@@ -9,6 +9,7 @@ BUFFER_SIZE:int = 512
 MIDDLE_C:int = 60
 SAMPLE_RATE:int = 44100
 
+# NOTE that files for the Dreampler should be in 44.1khz stereo 16bit
 class Dreampler:
     def __init__(self, segment:AudioSegment, root_note:int = MIDDLE_C):
         if not isinstance(segment, AudioSegment):
@@ -23,7 +24,13 @@ class Dreampler:
         segment.export(inp_file, format = "wav")
         self.engine = daw.RenderEngine(SAMPLE_RATE, BUFFER_SIZE)
         sig, sr = librosa.load(inp_file.name, sr = SAMPLE_RATE, mono = False)
-        self.sampler = self.engine.make_sampler_processor("playback", sig)
+
+        try:
+            self.sampler = self.engine.make_sampler_processor("playback", sig)
+        except IndexError as e:
+            print("Got an error. Are you sure your files are stereo?")
+            raise(e)
+
         self.param_desc = self.sampler.get_parameters_description()
         self.set_param("Center Note", self.root_note)
         self.set_adsr()

@@ -1,6 +1,7 @@
 from bbgen.dreampler import Dreampler, SAMPLE_RATE
 from bbgen.soundbank import Soundbank
 from bbgen.util import get_notes_from_midi
+from loguru import logger
 from mido import MidiFile
 from pathlib import Path
 from pydub import AudioSegment
@@ -11,17 +12,19 @@ import re
 RE_NOTE_PATTERN = re.compile(r'^(\d+)\.')
 
 class Dreamstrument:
-    def __init__(self, path:str, suffix = "wav", pattern = RE_NOTE_PATTERN):
+    def __init__(self, path:str, suffix = "wav", pattern = RE_NOTE_PATTERN, round_robin:bool = False):
+        logger.debug("Initializing Dreamstrument")
         self.path = Path(path)
         self.suffix = suffix
         self.pattern = pattern
-        self.soundbank = Soundbank()
+        self.soundbank = Soundbank(round_robin = round_robin)
         self.load_soundbank()
 
     def load_soundbank(self):
         # Iterate over all the samples in a directory and create samples
         # based on the file
         for path in self.path.glob(f"*.{self.suffix}"):
+            logger.debug(f"Trying to create Dreampler from sample {path}")
             match = self.pattern.findall(str(path.stem));
 
             if len(match) == 0:
@@ -35,11 +38,11 @@ class Dreamstrument:
     def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
         length = midi.length
-        print(f"Rendering midi file of {length} length, PPQN is {midi.ticks_per_beat}")
+        logger.debug(f"Rendering midi file of {length} length, PPQN is {midi.ticks_per_beat}")
         comp = AudioSegment.silent(duration = length * 1000)
 
         for n in get_notes_from_midi(midi):
-            print(n)
+            logger.debug(f"Render note: {n}")
             note = n["note"]
             time = n["time"]
 

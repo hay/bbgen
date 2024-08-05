@@ -1,9 +1,11 @@
+from loguru import logger
 from random import choice
 
 class Soundbank:
     def __init__(self, round_robin:bool = True):
         self.samplers = {}
         self.round_robin = round_robin
+        logger.info(f"Initializing soundbank, round robin: {round_robin}")
 
     def add_sampler(self, note:int, sampler):
         if note in self.samplers:
@@ -22,6 +24,9 @@ class Soundbank:
         # otherwise use choice to get a random sampler
         if self.round_robin:
             next_index = (sampler["index"] + 1) % len(sampler["samplers"])
-            return sampler["samplers"][next_index]
+            logger.debug(f"Round robin note: {note}/{next_index}")
+            smp = sampler["samplers"][next_index]
+            sampler["index"] = next_index
+            return smp
         else:
             return choice(sampler["samplers"])

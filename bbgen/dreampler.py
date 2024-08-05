@@ -1,6 +1,7 @@
-from scipy.io import wavfile
+from loguru import logger
 from mido import MidiTrack, MidiFile
 from pydub import AudioSegment
+from scipy.io import wavfile
 from tempfile import NamedTemporaryFile
 import dawdreamer as daw
 import librosa
@@ -15,7 +16,7 @@ class Dreampler:
         if not isinstance(segment, AudioSegment):
             raise Exception(f"Segment is not an AudioSegment but {type(segment)}: {segment}")
 
-        print(f"Initializing Dreampler with segment {segment}, root_note is {root_note}")
+        logger.debug(f"Initializing Dreampler with segment {segment}, root_note is {root_note}")
         self.root_note = root_note
         self.segment = segment
 
@@ -28,7 +29,7 @@ class Dreampler:
         try:
             self.sampler = self.engine.make_sampler_processor("playback", sig)
         except IndexError as e:
-            print("Got an error. Are you sure your files are stereo?")
+            logger.warning("Got an error. Are you sure your files are stereo?")
             raise(e)
 
         self.param_desc = self.sampler.get_parameters_description()
@@ -44,7 +45,7 @@ class Dreampler:
 
     def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
-        print(f"Rendering midi file of {midi.length} length")
+        logger.debug(f"Rendering midi file of {midi.length} length")
 
         infile = NamedTemporaryFile(suffix = ".mid")
         midi.save(infile.name)

@@ -1,5 +1,6 @@
 from bbgen.effects import TimeStretch
 from bbgen.util import get_notes_from_midi, velocity_to_db
+from loguru import logger
 from mido import MidiTrack, MidiFile
 from pydub import AudioSegment
 import json
@@ -12,6 +13,8 @@ class Crapler:
         if not isinstance(segment, AudioSegment):
             raise Exception(f"Segment is not an AudioSegment but {type(segment)}: {segment}")
 
+        logger.info("Initializing Crapler")
+
         self.cache = {}
         self.root_note = root_note
         self.segment = segment
@@ -19,7 +22,7 @@ class Crapler:
     def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
         length = midi.length
-        print(f"Rendering midi file of {length} length, PPQN is {midi.ticks_per_beat}")
+        logger.info(f"Rendering midi file of {length} length, PPQN is {midi.ticks_per_beat}")
         comp = AudioSegment.silent(duration = length * 1000)
 
         for note in get_notes_from_midi(midi):

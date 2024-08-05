@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from loguru import logger
 from pedalboard import Pedalboard
 from pedalboard.io import AudioFile
 from pydub import AudioSegment
@@ -9,7 +10,7 @@ class PedalboardProcessor:
     board: Pedalboard
 
     def apply(self, segment:AudioSegment) -> AudioSegment:
-        print(f"Applying Pedalboard")
+        logger.info(f"Applying Pedalboard")
 
         # FIXME: this must somehow get more efficient
         in_file = NamedTemporaryFile(suffix = ".wav")

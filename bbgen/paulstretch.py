@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from loguru import logger
 from numpy import *
 from pydub import AudioSegment
 from tempfile import NamedTemporaryFile
@@ -13,7 +14,7 @@ class Paulstretch:
 
     def apply(self, audio_segment:AudioSegment) -> AudioSegment:
         # FIXME: use raw_data() here instead of rendering to file first
-        print("Applying paulstretch")
+        logger.info("Applying paulstretch")
 
         in_file = NamedTemporaryFile()
         out_file = NamedTemporaryFile()
@@ -59,7 +60,7 @@ class Paulstretch:
         return orig_n
 
     def _render(self, outfilename):
-        print(f"Rendering to {outfilename}")
+        logger.info(f"Rendering to {outfilename}")
         smp = self.smp
         samplerate = self.samplerate
         stretch = self.stretch
@@ -136,9 +137,6 @@ class Paulstretch:
 
             start_pos+=displace_pos
             if start_pos>=nsamples:
-                # print ("100 %")
                 break
-            # sys.stdout.write ("%d %% \r" % int(100.0*start_pos/nsamples))
-            # sys.stdout.flush()
 
         outfile.close()

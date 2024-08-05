@@ -16,7 +16,7 @@ class Dreampler:
         if not isinstance(segment, AudioSegment):
             raise Exception(f"Segment is not an AudioSegment but {type(segment)}: {segment}")
 
-        logger.debug(f"Initializing Dreampler with segment {segment}, root_note is {root_note}")
+        logger.info(f"Initializing Dreampler with segment {segment}, root_note is {root_note}")
         self.root_note = root_note
         self.segment = segment
 
@@ -29,7 +29,7 @@ class Dreampler:
         try:
             self.sampler = self.engine.make_sampler_processor("playback", sig)
         except IndexError as e:
-            logger.warning("Got an error. Are you sure your files are stereo?")
+            logger.error("Got an error. Are you sure your files are stereo?")
             raise(e)
 
         self.param_desc = self.sampler.get_parameters_description()
@@ -45,7 +45,7 @@ class Dreampler:
 
     def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
-        logger.debug(f"Rendering midi file of {midi.length} length")
+        logger.info(f"Rendering midi file of {midi.length} length")
 
         infile = NamedTemporaryFile(suffix = ".mid")
         midi.save(infile.name)

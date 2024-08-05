@@ -13,7 +13,7 @@ RE_NOTE_PATTERN = re.compile(r'^(\d+)\.')
 
 class Dreamstrument:
     def __init__(self, path:str, suffix = "wav", pattern = RE_NOTE_PATTERN, round_robin:bool = False):
-        logger.debug("Initializing Dreamstrument")
+        logger.info(f"Initializing Dreamstrument from path {path}")
         self.path = Path(path)
         self.suffix = suffix
         self.pattern = pattern
@@ -38,7 +38,7 @@ class Dreamstrument:
     def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
         length = midi.length
-        logger.debug(f"Rendering midi file of {length} length, PPQN is {midi.ticks_per_beat}")
+        logger.info(f"Rendering midi file of {length} length, PPQN is {midi.ticks_per_beat}")
         comp = AudioSegment.silent(duration = length * 1000)
 
         for n in get_notes_from_midi(midi):

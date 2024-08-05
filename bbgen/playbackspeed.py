@@ -1,5 +1,6 @@
 from bbgen.timestretch import TimeStretch
 from dataclasses import dataclass
+from loguru import logger
 from math import log
 from pydub import AudioSegment
 
@@ -9,7 +10,7 @@ class Playbackspeed:
     high_quality: bool = True
 
     def apply(self, segment:AudioSegment) -> AudioSegment:
-        print(f"Applying Playbackspeed {self.rate}")
+        logger.info(f"Applying Playbackspeed {self.rate}")
 
         # Convert rate to semitones
         pitch = log(self.rate ** 12) / log(2)

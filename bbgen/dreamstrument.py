@@ -21,6 +21,10 @@ class Dreamstrument:
         self.load_soundbank()
 
     def load_soundbank(self):
+        # Do a check if the soundbank actually exists
+        if not self.path.exists():
+            raise FileNotFoundError(f"Path for the instrument doesn't exist: {self.path}")
+
         # Iterate over all the samples in a directory and create samples
         # based on the file
         for path in self.path.glob(f"*.{self.suffix}"):

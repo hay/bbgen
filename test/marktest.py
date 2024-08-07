@@ -3,16 +3,18 @@ sys.path.append("..")
 
 from bbgen.dreamstrument import Dreamstrument
 from bbgen.isobar import Timeline
+from bbgen.pprocessor import PedalboardProcessor
+from mido import MidiFile
+from pedalboard import Pedalboard, Delay, Reverb
 import isobar as iso
 import random
 
-possible_keys = [['C#', 'minor'], ['A', 'major'], ['G#', 'minor']]
-picked_key = random.choice(possible_keys)
-note_names = picked_key[0]
-key_types = picked_key[1]
-key_sequence = iso.Key(note_names, key_types)
-durationChords = 16
+# add random with seed
+episodeSeed = 10 # @param {type:"integer"}
+random.seed(episodeSeed)
 
+# simpele sequentie
+#chord_sequence = [7, 4, 5, 2] # @param {type:"raw"}
 chord_sequence = random.sample(range(0, 8), 4)
 
 # noten om te spelen
@@ -29,24 +31,49 @@ for note in notesInChord:
     new_notes.append(new_note)
 
 notesInChord = new_notes
+
+# zero based
+chord_sequence = [element - 1 for element in chord_sequence]
+
+# toonladder gebaseerd op welke worker
+workerSeed = 1 # @param {type:"integer"}
+random.seed(workerSeed)
+possible_keys = [['C#', 'minor'], ['A', 'major'], ['G#', 'minor']]
+picked_key = random.choice(possible_keys)
+note_names = picked_key[0]
+key_types = picked_key[1]
+key_sequence = iso.Key(note_names, key_types)
+print(key_sequence)
+
 chord_sequence_iso = iso.PSequence([(notesInChord[0]+element,notesInChord[1]+element,notesInChord[2]+element) for element in chord_sequence])
 
-timeline = Timeline(60)
-timeline.clear()
-timeline = Timeline(durationChords*len(chord_sequence)/8)
+durationChords = 16
 
+key = iso.PStaticPattern(key_sequence, 4)
+timeline = Timeline(60)
 timeline.schedule({
-    "degree": iso.PSequence([9, 7, 3, 0]),
-    "key": key_sequence,
-    "octave": 5,
-    "duration": durationChords/8,
+    "degree": chord_sequence_iso,
+    "key": key,
+    "octave": 3,
+    "duration": durationChords,
     "amplitude": 25,
 })
 
 instrument = Dreamstrument(
-    path = "sounds/instruments/voices/essentialWorkers-pad1"
+    path = "sounds/instruments/voices/essentialWorkers-pad1",
+    round_robin = True,
+    duration_multiplier = 4
 )
 
-midi = timeline.to_midi()
+# midi = timeline.to_midi()
+# midi.save("synth-test.mid")
+midi = MidiFile("./synth-test.mid")
 comp = instrument.render_midi(midi)
-comp.fade_out(500).export("output/synthTest2.mp3")
+
+board = Pedalboard([
+    Delay(0.5, feedback = 0.5, mix = 0.3),
+    Reverb(room_size=0.7, wet_level = 0.5, dry_level = 0.5)
+])
+
+comp2 = PedalboardProcessor(board).apply(comp)
+comp2.export("output/synthTest.mp3")

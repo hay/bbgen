@@ -62,7 +62,6 @@ timeline.schedule({
 instrument = Dreamstrument(
     path = "sounds/instruments/voices/essentialWorkers-pad1",
     round_robin = True,
-    duration_multiplier = 4
 )
 
 # midi = timeline.to_midi()

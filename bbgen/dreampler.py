@@ -45,7 +45,7 @@ class Dreampler:
 
     def render_midi(self, midi:MidiFile) -> AudioSegment:
         # Create a new segment that is the length of the complete composition
-        logger.info(f"Rendering midi file of {midi.length} length")
+        logger.debug(f"Rendering midi file of {midi.length} length")
 
         infile = NamedTemporaryFile(suffix = ".mid")
         midi.save(infile.name)
@@ -66,6 +66,29 @@ class Dreampler:
 
         return segment
 
+    def render_midi_note(self, note, velocity, duration) -> AudioSegment:
+        logger.debug(f"Rendering MIDI note {note}, {velocity}, {duration}")
+
+        self.sampler.clear_midi()
+        self.sampler.add_midi_note(note, velocity, 0, duration)
+        self.engine.load_graph([
+            (self.sampler, [])
+        ])
+
+        # If duration is shorter than the sample length, max out to
+        # sample length
+        if duration < self.segment_length:
+            logger.debug(f"Duration ({duration}) shorter than segment length ({self.segment_length}), compensating")
+            duration = self.segment_length
+
+        self.engine.render(duration)
+        output = self.engine.get_audio()
+        outfile = NamedTemporaryFile(suffix = ".wav")
+        wavfile.write(outfile.name, SAMPLE_RATE, output.transpose())
+        segment = AudioSegment.from_wav(outfile.name)
+        outfile.close()
+        return segment
+
     def set_adsr(self, attack = 0, decay = 0, sustain = 1, release = 100):
         self.set_param("Amp Env Attack", attack)
         self.set_param("Amp Env Decay", decay)
@@ -74,3 +97,8 @@ class Dreampler:
 
     def set_param(self, name:str, value):
         self.sampler.set_parameter(self.param_index(name), value)
+
+    @property
+    def segment_length(self) -> float:
+        # Note that this is in seconds, AudioSegment returns ms
+        return len(self.segment) / 1000

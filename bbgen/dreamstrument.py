@@ -1,12 +1,10 @@
-from bbgen.dreampler import Dreampler, SAMPLE_RATE
+from bbgen.dreampler import Dreampler
 from bbgen.soundbank import Soundbank
 from bbgen.util import get_notes_from_midi
 from loguru import logger
 from mido import MidiFile
 from pathlib import Path
 from pydub import AudioSegment
-from scipy.io import wavfile
-from tempfile import NamedTemporaryFile
 import re
 
 RE_NOTE_PATTERN = re.compile(r'^(\d+)\.')
@@ -49,27 +47,11 @@ class Dreamstrument:
             logger.debug(f"Render note: {n}")
             note = n["note"]
             time = n["time"]
-
-            # Need to add these two values somewhere
             duration = n["duration"]
             velocity = n["velocity"]
 
-            # FIXME this is obviously a terrible hack
-            # We need to figure out how the graph works and reset that instead
-            # of just re-creating the Dreampler
-            s = self.soundbank.get_sampler_by_note(note)
-            sampler = Dreampler(s.segment, s.root_note)
-
-            sampler.sampler.add_midi_note(note, velocity, 0, duration)
-            sampler.engine.load_graph([
-                (sampler.sampler, [])
-            ])
-            sampler.engine.render(duration * 2) # Render for the double amount of time because for some reason release is not calculated
-            output = sampler.engine.get_audio()
-            outfile = NamedTemporaryFile(suffix = ".wav")
-            wavfile.write(outfile.name, SAMPLE_RATE, output.transpose())
-            segment = AudioSegment.from_wav(outfile.name)
-            outfile.close()
+            sampler = self.soundbank.get_sampler_by_note(note)
+            segment = sampler.render_midi_note(note, velocity, duration)
 
             comp = comp.overlay(segment, position = time * 1000)
 

@@ -2,6 +2,8 @@
 *.mid
 *.mp3
 *.wav
+*.asd
+*.zip
 test/samples
 !test/raindrop_c40/*.wav
 bbgen.egg-info

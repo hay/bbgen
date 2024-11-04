@@ -49,8 +49,8 @@ python samplers.py
 ```
 
 ## Things to do:
-🔲 Documentation
-🔲 Speed up the samplers (esp. `Dreampler` and `Dreamstrument` are very slow)
+* Documentation
+* Speed up the samplers (esp. `Dreampler` and `Dreamstrument` are very slow)
 
 ## License
 MIT &copy; [Hay Kranen](http://www.haykranen.nl)
